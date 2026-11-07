@@ -1,0 +1,1213 @@
+* {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+
+html,
+body,
+#root {
+   height: 100%;
+}
+
+body {
+   font-family: 'Segoe UI', system-ui, sans-serif;
+   font-size: 13px;
+   color: #1d2330;
+   background: #f6f7f9;
+}
+
+button {
+   font: inherit;
+   color: inherit;
+   cursor: pointer;
+}
+
+.app {
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+}
+
+.header {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   padding: 16px 20px;
+   background: #fff;
+   border-bottom: 1px solid #e3e6eb;
+}
+
+.logo {
+   width: 34px;
+   height: 34px;
+   border-radius: 9px;
+   background: linear-gradient(135deg, #3b82f6, #14b8a6);
+   color: #fff;
+   font-weight: 700;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.app-name {
+   font-size: 16px;
+   font-weight: 600;
+}
+
+.sub {
+   color: #6b7385;
+   font-size: 12px;
+}
+
+.tabs {
+   display: flex;
+   gap: 4px;
+   padding: 0 20px;
+   background: #fff;
+   border-bottom: 1px solid #e3e6eb;
+}
+
+.tab {
+   padding: 10px 14px;
+   color: #5b6475;
+   border: none;
+   background: none;
+   border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+   color: #1d2330;
+}
+
+/* EN: The label reserves the width of its bold variant, so tabs don't shift when the active one becomes bold.
+   RU: Подпись заранее занимает ширину жирного варианта, чтобы вкладки не сдвигались, когда активная становится жирной. */
+.tab-label {
+   display: inline-flex;
+   flex-direction: column;
+}
+
+.tab-label::after {
+   content: attr(data-text);
+   height: 0;
+   overflow: hidden;
+   visibility: hidden;
+   font-weight: 600;
+}
+
+.tab.active {
+   color: #1d4ed8;
+   border-color: #2563eb;
+   font-weight: 600;
+}
+
+.body {
+   flex: 1;
+   overflow: auto;
+   padding: 18px 20px 20px;
+}
+
+.card {
+   background: #fff;
+   border: 1px solid #e3e6eb;
+   border-radius: 10px;
+   padding: 14px 16px;
+}
+
+.placeholder {
+   color: #8a92a2;
+   text-align: center;
+   padding: 40px 16px;
+}
+
+.grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 16px;
+   align-items: start;
+}
+
+.wide {
+   grid-column: 1 / -1;
+}
+
+/* EN: Main tab: a narrow "State" and the pick table. RU: Главная вкладка: узкое «Состояние» и таблица подбора. */
+.zapret-grid {
+   grid-template-columns: 280px 1fr;
+}
+
+dl.compact {
+   grid-template-columns: 90px 1fr;
+}
+
+dd.wrap {
+   flex-wrap: wrap;
+}
+
+/* EN: A narrow window: cards one under another. RU: Узкое окно: карточки друг под другом. */
+@media (max-width: 880px) {
+   .grid,
+   .zapret-grid {
+      grid-template-columns: 1fr;
+   }
+}
+
+.card h3 {
+   font-size: 13px;
+   font-weight: 600;
+   margin-bottom: 10px;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.card h3 .hint {
+   margin-left: auto;
+   font-weight: 400;
+   color: #8a92a2;
+   font-size: 12px;
+}
+
+.muted {
+   color: #6b7385;
+}
+
+.small {
+   font-size: 11.5px;
+}
+
+.error-text {
+   color: #b91c1c;
+}
+
+.banner {
+   padding: 10px 14px;
+   border-radius: 8px;
+   background: #fff7ed;
+   border: 1px solid #fed7aa;
+   color: #9a3412;
+   margin-bottom: 12px;
+   line-height: 1.5;
+}
+
+.grid .banner {
+   margin-bottom: 0;
+}
+
+.banner.info {
+   background: #eff6ff;
+   border-color: #bfdbfe;
+   color: #1d4ed8;
+}
+
+.hint-text {
+   margin-top: 12px;
+   font-size: 12px;
+}
+
+.tag.ok {
+   background: #dcfce7;
+   color: #15803d;
+}
+
+.tag.warn {
+   background: #fef3c7;
+   color: #a16207;
+}
+
+.tag.bad {
+   background: #fee2e2;
+   color: #b91c1c;
+}
+
+.service-row,
+.pick-row {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   padding: 8px 0;
+   border-top: 1px solid #f0f2f5;
+}
+
+.service-row:first-of-type,
+.pick-row:first-child {
+   border-top: none;
+}
+
+.service-row .name,
+.pick-row .name {
+   font-weight: 500;
+}
+
+.right {
+   margin-left: auto;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.ms {
+   color: #6b7385;
+   font-size: 11.5px;
+   min-width: 56px;
+   text-align: right;
+   white-space: nowrap;
+}
+
+.pick-table {
+   max-height: 420px;
+   overflow: auto;
+}
+
+/* EN: Fixed slot for the mark, so the names start on one line. RU: Постоянное место под метку, чтобы названия начинались по одной линии. */
+.pick-mark {
+   flex: none;
+   width: 92px;
+}
+
+.pick-row .tag.rank {
+   min-width: 24px;
+   text-align: center;
+}
+
+.tag.recommended {
+   background: #16a34a;
+   color: #fff;
+}
+
+.pick-row .btn.link {
+   margin-left: 4px;
+}
+
+.header-right {
+   margin-left: auto;
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}
+
+.lang-switch {
+   display: flex;
+   border: 1px solid #cfd4dc;
+   border-radius: 7px;
+   overflow: hidden;
+}
+
+.lang-switch button {
+   border: none;
+   background: #fff;
+   padding: 5px 10px;
+   font-size: 12px;
+   color: #5b6475;
+}
+
+.lang-switch button + button {
+   border-left: 1px solid #cfd4dc;
+}
+
+.lang-switch button.active {
+   background: #2563eb;
+   color: #fff;
+   font-weight: 600;
+}
+
+.dot {
+   display: inline-block;
+   width: 7px;
+   height: 7px;
+   border-radius: 50%;
+   margin-right: 6px;
+   vertical-align: 1px;
+}
+
+.dot.green {
+   background: #22c55e;
+}
+
+.dot.yellow {
+   background: #f59e0b;
+}
+
+.dot.grey {
+   background: #b0b6c1;
+}
+
+.menu-root {
+   position: relative;
+}
+
+.dropdown {
+   position: absolute;
+   top: calc(100% + 4px);
+   left: 0;
+   z-index: 10;
+   width: 330px;
+   max-height: 360px;
+   overflow: auto;
+   background: #fff;
+   border: 1px solid #cfd4dc;
+   border-radius: 8px;
+   box-shadow: 0 8px 24px rgba(20, 30, 50, 0.18);
+   padding: 4px;
+}
+
+.dropdown-item {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   width: 100%;
+   padding: 6px 10px;
+   border: none;
+   border-radius: 5px;
+   background: none;
+   text-align: left;
+   font-size: 12.5px;
+}
+
+.dropdown-item:hover:not(:disabled) {
+   background: #eef2fb;
+}
+
+.dropdown-item.current {
+   font-weight: 600;
+   color: #1d4ed8;
+   cursor: default;
+}
+
+.btn.link.inline {
+   margin-left: 0;
+}
+
+.warn-text {
+   color: #a16207;
+}
+
+.update-report ul {
+   margin: 0;
+   padding-left: 18px;
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+   line-height: 1.45;
+}
+
+.input {
+   border: 1px solid #cfd4dc;
+   border-radius: 6px;
+   padding: 5px 8px;
+   font: inherit;
+   font-size: 12.5px;
+   width: 90px;
+}
+
+.btn.danger {
+   color: #b91c1c;
+   border-color: #fecaca;
+}
+
+.btn.danger:hover:not(:disabled) {
+   background: #fef2f2;
+}
+
+dd {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.switch {
+   width: 36px;
+   height: 20px;
+   border-radius: 10px;
+   border: none;
+   background: #c3c8d1;
+   position: relative;
+   flex: none;
+   transition: background 0.15s;
+}
+
+.switch::after {
+   content: '';
+   position: absolute;
+   top: 3px;
+   left: 3px;
+   width: 14px;
+   height: 14px;
+   border-radius: 50%;
+   background: #fff;
+   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+   transition: left 0.15s;
+}
+
+.switch.on {
+   background: #22c55e;
+}
+
+.switch.on::after {
+   left: 19px;
+}
+
+.switch:disabled {
+   opacity: 0.5;
+   cursor: default;
+}
+
+.btn.link {
+   border: none;
+   padding: 0;
+   margin-left: auto;
+   color: #2563eb;
+   background: none;
+}
+
+.btn.link:hover:not(:disabled) {
+   background: none;
+   text-decoration: underline;
+}
+
+.banner-row {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+}
+
+.banner.error {
+   background: #fef2f2;
+   border-color: #fecaca;
+   color: #b91c1c;
+}
+
+.status {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   font-size: 15px;
+   font-weight: 600;
+   margin-bottom: 12px;
+}
+
+.big-dot {
+   width: 12px;
+   height: 12px;
+   border-radius: 50%;
+   flex: none;
+}
+
+.big-dot.green {
+   background: #22c55e;
+   box-shadow: 0 0 0 4px #dcfce7;
+}
+
+.big-dot.grey {
+   background: #b0b6c1;
+   box-shadow: 0 0 0 4px #eceef1;
+}
+
+.big-dot.yellow {
+   background: #f59e0b;
+   box-shadow: 0 0 0 4px #fef3c7;
+}
+
+dl {
+   display: grid;
+   grid-template-columns: 110px 1fr;
+   row-gap: 7px;
+   font-size: 12.5px;
+   /* EN: The height of a switch, so a label and a switch in one row share the middle line.
+      RU: Высота переключателя — чтобы подпись и переключатель в одной строке стояли на одной линии. */
+   line-height: 20px;
+}
+
+dt {
+   color: #6b7385;
+}
+
+.path {
+   word-break: break-all;
+}
+
+.tag {
+   padding: 1px 7px;
+   border-radius: 10px;
+   font-size: 11px;
+   background: #eef1f5;
+   color: #4a5263;
+   white-space: nowrap;
+}
+
+.tag.info {
+   background: #dbeafe;
+   color: #1d4ed8;
+}
+
+.btns {
+   display: flex;
+   gap: 8px;
+   margin-top: 14px;
+   flex-wrap: wrap;
+}
+
+.btn {
+   padding: 7px 12px;
+   border-radius: 7px;
+   border: 1px solid #cfd4dc;
+   background: #fff;
+   font-size: 12.5px;
+   white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+   background: #f3f5f8;
+}
+
+.btn.primary {
+   background: #2563eb;
+   border-color: #2563eb;
+   color: #fff;
+}
+
+.btn.primary:hover:not(:disabled) {
+   background: #1d4ed8;
+}
+
+.btn:disabled {
+   opacity: 0.5;
+   cursor: default;
+}
+
+.welcome {
+   max-width: 640px;
+   margin: 0 auto;
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+}
+
+.welcome h2 {
+   font-size: 18px;
+   font-weight: 600;
+}
+
+.welcome p {
+   line-height: 1.5;
+}
+
+.option {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+}
+
+.option > div {
+   flex: 1;
+}
+
+.progress-wrap {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-top: 8px;
+}
+
+.progress {
+   flex: 1;
+   height: 6px;
+   border-radius: 3px;
+   background: #e5e7eb;
+   overflow: hidden;
+}
+
+.progress div {
+   height: 100%;
+   background: #2563eb;
+   transition: width 0.1s;
+}
+
+.recording-indicator {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   font-size: 13px;
+   /* EN: The text box equals the font, so the dot is centered on the letters. RU: Блок текста по размеру шрифта — точка встаёт по центру букв. */
+   line-height: 1;
+   color: #b91c1c;
+   font-variant-numeric: tabular-nums;
+}
+
+.rec-dot {
+   width: 9px;
+   height: 9px;
+   border-radius: 50%;
+   background: #dc2626;
+   animation: rec-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-blink {
+   50% {
+      opacity: 0.3;
+   }
+}
+
+.modal-overlay {
+   position: fixed;
+   inset: 0;
+   z-index: 100;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 16px;
+   background: rgba(15, 23, 42, 0.35);
+}
+
+.modal {
+   width: 100%;
+   max-width: 480px;
+   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+}
+
+.modal p {
+   line-height: 1.5;
+}
+
+.steps {
+   margin: 8px 0 12px;
+   padding-left: 20px;
+   line-height: 1.6;
+}
+
+.file-path {
+   margin: 8px 0 12px;
+   padding: 8px 10px;
+   border-radius: 7px;
+   background: #f3f5f8;
+   font-family: Consolas, monospace;
+   font-size: 12px;
+   word-break: break-all;
+}
+
+/* EN: "Diagnostics" tab: the video check. RU: Вкладка «Диагностика»: проверка видео. */
+.scenarios {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 8px;
+   margin: 10px 0;
+}
+
+.scenario {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+   text-align: left;
+   border: 1px solid #d9dde3;
+   border-radius: 8px;
+   padding: 8px 10px;
+   background: #fff;
+}
+
+.scenario:hover {
+   border-color: #93b4f5;
+}
+
+.scenario.on {
+   border-color: #2563eb;
+   background: #f1f5ff;
+   box-shadow: 0 0 0 1px #2563eb inset;
+}
+
+.opts {
+   display: flex;
+   gap: 18px;
+   flex-wrap: wrap;
+   align-items: center;
+}
+
+.opt {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   cursor: pointer;
+}
+
+.seg {
+   display: inline-flex;
+   border: 1px solid #cfd4dc;
+   border-radius: 6px;
+   overflow: hidden;
+}
+
+.seg button {
+   border: none;
+   background: #fff;
+   padding: 4px 9px;
+   font-size: 12px;
+   border-left: 1px solid #e3e6eb;
+}
+
+.seg button:first-child {
+   border-left: none;
+}
+
+.seg button.on {
+   background: #2563eb;
+   color: #fff;
+}
+
+.phase-switch {
+   margin-bottom: 10px;
+}
+
+.card .progress {
+   margin: 8px 0 4px;
+}
+
+.timeline {
+   display: block;
+   width: 100%;
+   margin-top: 12px;
+   font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.timeline-label {
+   font-size: 11px;
+   fill: #4a5263;
+}
+
+.timeline-label.strong {
+   font-size: 11.5px;
+   font-weight: 600;
+   fill: #1d2330;
+}
+
+.timeline-axis {
+   font-size: 10px;
+   fill: #8a92a2;
+}
+
+.timeline-switch {
+   stroke: #94a3b8;
+   stroke-dasharray: 2 3;
+}
+
+.legend {
+   display: flex;
+   gap: 14px;
+   flex-wrap: wrap;
+   margin-top: 6px;
+   color: #6b7385;
+   font-size: 11.5px;
+}
+
+.legend i {
+   display: inline-block;
+   width: 12px;
+   height: 8px;
+   border-radius: 2px;
+   margin-right: 5px;
+}
+
+.metrics {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 10px;
+}
+
+.metric {
+   background: #f6f7f9;
+   border-radius: 8px;
+   padding: 8px 10px;
+}
+
+.metric .value {
+   font-size: 17px;
+   font-weight: 600;
+   margin: 2px 0;
+}
+
+.metric .value.ok {
+   color: #15803d;
+}
+
+.metric .value.warn {
+   color: #a16207;
+}
+
+.metric .value.bad {
+   color: #b91c1c;
+}
+
+.verdict {
+   margin-top: 12px;
+   border-radius: 8px;
+   padding: 10px 12px;
+   background: #fff7ed;
+   border: 1px solid #fed7aa;
+   line-height: 1.5;
+}
+
+.verdict.ok {
+   background: #f0fdf4;
+   border-color: #bbf7d0;
+}
+
+.verdict ul {
+   margin: 4px 0 8px 18px;
+}
+
+.verdict ul:last-child {
+   margin-bottom: 0;
+}
+
+table.compare {
+   width: 100%;
+   border-collapse: collapse;
+   margin-top: 12px;
+   font-size: 12.5px;
+}
+
+table.compare th {
+   text-align: left;
+   font-weight: 500;
+   color: #6b7385;
+   padding: 5px 6px;
+   border-bottom: 1px solid #e3e6eb;
+}
+
+table.compare td {
+   padding: 6px;
+   border-bottom: 1px solid #f0f2f5;
+}
+
+/* EN: QUIC in browsers: the strip at the top of "Diagnostics". RU: QUIC в браузерах: полоса вверху «Диагностики». */
+.quic-strip {
+   grid-column: 1 / -1;
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+   padding: 9px 14px;
+   border-radius: 10px;
+   background: #fff;
+   border: 1px solid #e3e6eb;
+}
+
+.quic-strip.off {
+   background: #fffbeb;
+   border-color: #fde68a;
+}
+
+.quic-strip-row {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.quic-strip-right {
+   margin-left: auto;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.help {
+   cursor: help;
+   text-decoration: underline dotted;
+}
+
+/* EN: Deep pick progress. RU: Ход глубокого подбора. */
+.deep-steps {
+   list-style: none;
+   margin: 10px 0 0;
+   padding: 0;
+}
+
+.deep-steps li {
+   display: grid;
+   grid-template-columns: 18px 220px 1fr;
+   align-items: center;
+   gap: 6px;
+   padding: 4px 0;
+   color: #8a92a2;
+}
+
+.deep-steps li.done,
+.deep-steps li.now {
+   color: #1d2330;
+}
+
+.deep-steps li.now .step-name {
+   font-weight: 600;
+}
+
+.deep-steps li.done .step-mark {
+   color: #15803d;
+}
+
+.deep-steps li.now .step-mark {
+   color: #2563eb;
+}
+
+.banner.info .btns {
+   margin-top: 8px;
+}
+
+/* EN: Video start from the deep pick in the quick pick card. RU: Старт видео из глубокого подбора в карточке быстрого. */
+.video-start {
+   min-width: 56px;
+   text-align: right;
+   font-size: 12px;
+   font-weight: 600;
+   white-space: nowrap;
+}
+
+.video-start.slow {
+   color: #b45309;
+}
+
+.video-start.none {
+   color: #b0b6c1;
+   font-weight: 400;
+}
+
+.deep-summary {
+   margin-top: 10px;
+   padding-top: 8px;
+   border-top: 1px solid #f0f2f5;
+   color: #4a5263;
+   font-size: 12px;
+}
+
+/* EN: "Services" card. RU: Карточка «Сервисы». */
+.svc-row {
+   display: flex;
+   align-items: flex-start;
+   gap: 10px;
+   padding: 9px 0;
+   border-top: 1px solid #f0f2f5;
+}
+
+.svc-row:first-of-type {
+   border-top: none;
+}
+
+.svc-row > input[type='checkbox'],
+.svc-spacer {
+   flex: none;
+   width: 15px;
+   margin-top: 2px;
+}
+
+.svc-row.off .svc-main {
+   opacity: 0.55;
+}
+
+.svc-main {
+   flex: 1;
+   min-width: 0;
+}
+
+.svc-row .right {
+   flex: none;
+}
+
+.chips {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 4px;
+   margin-top: 5px;
+}
+
+.chip {
+   display: inline-flex;
+   align-items: center;
+   gap: 4px;
+   background: #f1f3f6;
+   border: none;
+   border-radius: 5px;
+   padding: 1px 6px;
+   font-size: 11px;
+   color: #4a5263;
+}
+
+.chip.more {
+   color: #2563eb;
+   background: #eef2fb;
+}
+
+.chip.new {
+   background: #dbeafe;
+   color: #1d4ed8;
+}
+
+.chip-x {
+   border: none;
+   background: none;
+   color: #9aa1ae;
+   font-size: 10px;
+   padding: 0;
+}
+
+.chip-x:hover {
+   color: #b91c1c;
+}
+
+.add-domain {
+   display: flex;
+   gap: 8px;
+   margin-top: 8px;
+   max-width: 460px;
+}
+
+.add-domain input {
+   flex: 1;
+   min-width: 0;
+   border: 1px solid #cfd4dc;
+   border-radius: 6px;
+   padding: 5px 9px;
+   font: inherit;
+   font-size: 12.5px;
+}
+
+.exclusions {
+   margin-top: 10px;
+   padding-top: 10px;
+   border-top: 1px solid #f0f2f5;
+}
+
+.svc-note {
+   margin-top: 6px;
+}
+
+/* EN: Autostart. RU: Автозапуск. */
+.autostart-head {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   margin-bottom: 12px;
+}
+
+.autostart-head .switch {
+   margin-left: auto;
+}
+
+.modes {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 10px;
+}
+
+.modes.off {
+   opacity: 0.45;
+}
+
+.mode {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+   text-align: left;
+   border: 1px solid #d9dde3;
+   border-radius: 10px;
+   padding: 12px 14px;
+   background: #fff;
+   line-height: 1.5;
+}
+
+.mode:disabled {
+   cursor: default;
+}
+
+.mode.on {
+   border-color: #2563eb;
+   background: #f5f8ff;
+   box-shadow: 0 0 0 1px #2563eb inset;
+}
+
+.mode-title {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   font-weight: 600;
+   font-size: 13.5px;
+}
+
+.mode ul {
+   margin: 4px 0 0 18px;
+   font-size: 12px;
+   color: #4a5263;
+}
+
+.mode-note {
+   font-size: 11.5px;
+   color: #8a92a2;
+}
+
+.rb {
+   width: 15px;
+   height: 15px;
+   border-radius: 50%;
+   border: 1.5px solid #b8bfca;
+   flex: none;
+}
+
+.rb.on {
+   border: 4.5px solid #2563eb;
+}
+
+.setting-line {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   padding: 10px 0;
+   border-top: 1px solid #f0f2f5;
+}
+
+.setting-line:first-of-type {
+   border-top: none;
+}
+
+.setting-line > .switch {
+   margin-left: auto;
+}
+
+.setting-line.off {
+   opacity: 0.45;
+}
+
+.autostart-mode {
+   flex-basis: 100%;
+   line-height: 1.4;
+}
+
+.geo {
+   display: flex;
+   align-items: baseline;
+   gap: 6px;
+   /* EN: The same height as the header buttons, but the look of a status. RU: Та же высота, что у кнопок в шапке, но вид статуса. */
+   padding: 7px 10px;
+   border-radius: 8px;
+   background: #f1f5ff;
+   border: 1px solid #d6e2ff;
+   font-size: 12.5px;
+}
+
+.geo.foreign {
+   background: #fff7ed;
+   border-color: #fed7aa;
+}
+
+/* EN: NetPilot updates. RU: Обновления NetPilot. */
+.release-notes {
+   margin-top: 10px;
+   padding: 8px 10px;
+   border-radius: 8px;
+   background: #f6f7f9;
+   white-space: pre-wrap;
+   font-size: 12px;
+   line-height: 1.5;
+   max-height: 160px;
+   overflow: auto;
+}
+
+.app-update-banner {
+   margin-bottom: 16px;
+}

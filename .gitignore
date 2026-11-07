@@ -1,0 +1,30 @@
+# EN: Developer notes and mockups are kept locally only; README.md is for users and goes to the repository.
+# RU: Заметки разработчика и макеты хранятся только локально; README.md — для пользователей и попадает в репозиторий.
+docs/
+design/
+
+# EN: Dependencies and build output. RU: Зависимости и результаты сборки.
+node_modules
+dist
+dist-ssr
+*.local
+
+# EN: Logs. RU: Логи.
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# EN: Editor files, except the recommended extensions list. RU: Файлы редакторов, кроме списка рекомендуемых расширений.
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

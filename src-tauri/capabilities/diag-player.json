@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "diag-player",
+  "description": "Capability for the video check player and viewer windows: player events and full screen",
+  "windows": ["diag-player", "diag-viewer"],
+  "permissions": ["core:event:allow-emit", "core:window:allow-set-fullscreen"]
+}

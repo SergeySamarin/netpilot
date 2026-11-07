@@ -1,0 +1,56 @@
+# EN: Release: push an annotated tag like v0.2.0, its message becomes "what's new". GitHub builds the
+#     installer, signs the update and publishes the release with latest.json, which the app reads to update.
+# RU: Релиз: запушить аннотированный тег вида v0.2.0, его сообщение становится «что нового». GitHub собирает
+#     установщик, подписывает обновление и публикует релиз с latest.json, по которому приложение обновляется.
+name: Release
+
+on:
+    push:
+        tags: ['v*']
+
+permissions:
+    contents: write
+
+jobs:
+    release:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - uses: dtolnay/rust-toolchain@stable
+
+            - uses: swatinem/rust-cache@v2
+              with:
+                  workspaces: './src-tauri -> target'
+
+            - run: npm ci
+
+            - name: Release notes from the tag message
+              id: notes
+              shell: bash
+              run: |
+                  {
+                    echo 'body<<NOTES_END'
+                    git tag -l --format='%(contents)' "$GITHUB_REF_NAME"
+                    echo 'NOTES_END'
+                  } >> "$GITHUB_OUTPUT"
+
+            - uses: tauri-apps/tauri-action@v0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+                  TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+              with:
+                  tagName: ${{ github.ref_name }}
+                  releaseName: NetPilot ${{ github.ref_name }}
+                  releaseBody: ${{ steps.notes.outputs.body }}
+                  releaseDraft: false
+                  prerelease: false
+                  includeUpdaterJson: true

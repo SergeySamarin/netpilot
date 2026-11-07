@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <title>NetPilot</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+            }
+            body {
+                margin: 0;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                background: #0f172a;
+                color: #cbd5e1;
+                font: 13px 'Segoe UI', system-ui, sans-serif;
+                overflow: hidden;
+            }
+            .frame {
+                position: relative;
+                width: 640px;
+                height: 360px;
+                flex: none;
+                overflow: hidden;
+                border-radius: 6px;
+                background: #000;
+            }
+            .scaled {
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform-origin: 0 0;
+            }
+            .bar {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .caption {
+                flex: 1;
+                min-width: 200px;
+            }
+            label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+            }
+            button {
+                font: inherit;
+                color: #e2e8f0;
+                background: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 6px;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #334155;
+            }
+            body.view .frame {
+                width: 100%;
+                height: auto;
+                flex: 1;
+            }
+            body.full {
+                padding: 0;
+            }
+            body.full .frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+            }
+            body.full .bar {
+                display: none;
+            }
+            .exit {
+                display: none;
+                position: fixed;
+                right: 12px;
+                top: 12px;
+                z-index: 1;
+                opacity: 0.75;
+            }
+            body.full .exit {
+                display: block;
+            }
+            .hidden {
+                display: none !important;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="frame" id="frame">
+            <div class="scaled" id="scaled"><div id="player"></div></div>
+        </div>
+        <button class="exit" id="exit"></button>
+        <div class="bar">
+            <span class="caption" id="caption"></span>
+            <label id="keep-label" class="hidden">
+                <input type="checkbox" id="keep" />
+                <span id="keep-text"></span>
+            </label>
+            <button id="full"></button>
+        </div>
+        <script type="module" src="/src/diagPlayer/main.ts"></script>
+    </body>
+</html>
