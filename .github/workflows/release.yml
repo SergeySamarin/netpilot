@@ -36,6 +36,9 @@ jobs:
               id: notes
               shell: bash
               run: |
+                  # EN: checkout leaves a lightweight copy of the tag; fetch the annotated one to read its message.
+                  # RU: checkout оставляет простую копию тега; подтягиваем аннотированный, чтобы прочитать сообщение.
+                  git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
                   {
                     echo 'body<<NOTES_END'
                     git tag -l --format='%(contents)' "$GITHUB_REF_NAME"
