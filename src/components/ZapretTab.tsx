@@ -242,6 +242,7 @@ export function ZapretTab({
             <QuickPickCard
                 result={pickResult}
                 isStale={isPickStale}
+                strategies={overview.strategies}
                 progress={pick.progress}
                 timing={pick.timing}
                 isRunning={pick.isRunning}

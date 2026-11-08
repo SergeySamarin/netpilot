@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IPickProgress, IPickResult, IServiceCheck, IStrategyResult } from '../api/checks';
 import { IDeepPickResult, IDeepStrategyResult } from '../api/diag';
-import { strategyTitle } from '../api/zapret';
+import { IStrategy, strategyTitle } from '../api/zapret';
 import { IPickTiming } from '../hooks/useQuickPick';
 import { dateLocale, t } from '../i18n';
 import { estimateRemainingSeconds, formatRemaining, formatSeconds } from '../utils/format';
@@ -20,6 +20,8 @@ interface IQuickPickCardProps {
      * RU: Последний подбор есть, но для другой папки или версии.
      */
     isStale: boolean;
+    /** EN: All strategies of the folder, shown while there is no pick. RU: Все стратегии папки, видны, пока нет подбора. */
+    strategies: IStrategy[];
     progress: IPickProgress | null;
     timing: IPickTiming | null;
     isRunning: boolean;
@@ -84,6 +86,7 @@ function progressText(progress: IPickProgress | null): string {
 export function QuickPickCard({
     result,
     isStale,
+    strategies,
     progress,
     timing,
     isRunning,
@@ -151,18 +154,55 @@ export function QuickPickCard({
     }
 
     if (!result) {
+        // EN: No measurements yet — all strategies to turn on by hand, the current one first.
+        // RU: Замеров ещё нет — все стратегии для ручного включения, текущая первой.
+        const current = strategies.find((strategy: IStrategy) => strategy.id === currentStrategyId);
+        const ordered = [
+            ...(current ? [current] : []),
+            ...strategies.filter((strategy: IStrategy) => strategy !== current),
+        ];
+        const visible = isExpanded ? ordered : ordered.slice(0, TOP_COUNT);
         return (
-            <div className="card">
-                <h3>{t('Последний подбор')}</h3>
+            <div className={`card ${isExpanded ? 'wide' : ''}`}>
+                <h3>{t('Стратегии')}</h3>
                 <p className="muted">
                     {isStale
                         ? t(
-                              'Последний подбор был для другой папки или версии zapret, а в ней другие стратегии. Запустите подбор заново.'
+                              'Последний подбор был для другой папки или версии zapret, а в ней другие стратегии. Включите стратегию вручную или запустите подбор заново.'
                           )
                         : t(
-                              'Подбор ещё не запускался. Нажмите «Подобрать стратегию» — приложение проверит все стратегии и покажет, с какими открываются YouTube и Discord.'
+                              'Подбор ещё не запускался. Включите стратегию вручную или нажмите «Подобрать стратегию» — приложение проверит все стратегии и покажет, с какими открываются YouTube и Discord.'
                           )}
                 </p>
+                <div className="pick-table">
+                    {visible.map((strategy: IStrategy) => {
+                        const isCurrent = strategy.id === currentStrategyId;
+                        return (
+                            <div key={strategy.id} className="pick-row">
+                                <span className="name">{strategyTitle(strategy.id)}</span>
+                                {isCurrent && <span className="tag info">{t('текущая')}</span>}
+                                <span className="right">
+                                    <button
+                                        className="btn link"
+                                        disabled={disabled || isCurrent}
+                                        onClick={() => onApply(strategy.id)}
+                                    >
+                                        {t('включить')}
+                                    </button>
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+                {ordered.length > TOP_COUNT && (
+                    <div className="btns">
+                        <button className="btn link" onClick={() => setIsExpanded(!isExpanded)}>
+                            {isExpanded
+                                ? t('Свернуть')
+                                : t('Все стратегии ({count}) →', { count: ordered.length })}
+                        </button>
+                    </div>
+                )}
             </div>
         );
     }

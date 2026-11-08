@@ -77,7 +77,7 @@ function App() {
     const autostart = useAutostart(refresh);
     const appUpdate = useAppUpdate();
     const zapretServices = useZapretServices(
-        `${overview?.zapretDir ?? ''}|${overview?.version ?? ''}`
+        overview?.zapretDir ? `${overview.zapretDir}|${overview.version ?? ''}` : null
     );
 
     // EN: Checks are re-run only when the bypass state or the strategy changes.

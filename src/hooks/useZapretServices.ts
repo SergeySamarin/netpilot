@@ -29,18 +29,26 @@ export interface IZapretServices {
 }
 
 /**
- * EN: zapret lists as services. Re-read when the zapret folder or version changes (`listsKey`).
- * RU: Списки zapret как сервисы. Перечитываются при смене папки или версии zapret (`listsKey`).
+ * EN: zapret lists as services. Re-read when the zapret folder or version changes (`listsKey`);
+ *     null — the folder is not chosen yet, nothing to read.
+ * RU: Списки zapret как сервисы. Перечитываются при смене папки или версии zapret (`listsKey`);
+ *     null — папка ещё не выбрана, читать нечего.
  */
-export function useZapretServices(listsKey: string): IZapretServices {
+export function useZapretServices(listsKey: string | null): IZapretServices {
     const [state, setState] = useState<IServicesState | null>(null);
     const [isBusy, setIsBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [lastAdded, setLastAdded] = useState<AddResult | null>(null);
 
     useEffect(() => {
+        if (listsKey === null) {
+            return;
+        }
         getZapretServices()
-            .then(setState)
+            .then((next: IServicesState) => {
+                setState(next);
+                setError(null);
+            })
             .catch((e: unknown) => setError(errorText(e)));
     }, [listsKey]);
 
